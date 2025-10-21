@@ -6,6 +6,12 @@ pipeline {
     }
     
     stages {
+        stage('CleanUp') {
+            steps {
+                sh 'rm -rf /var/lib/jenkins/workspace/mvn-project/target/*'            
+            }
+        }
+        
         stage('Checkout') {
             steps {
                 checkout scm
@@ -29,7 +35,17 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-    } 
+        
+        stage('Deploy to Tomcat') {
+            steps {
+                sh '''
+                    sudo cp /var/lib/jenkins/workspace/mvn-project/target/emraay-bank-app.war /opt/tomcat/webapps/
+                    sudo chown tomcat:tomcat /opt/tomcat/webapps/emraay-bank-app.war
+                    sudo systemctl restart tomcat
+                '''
+            }
+        } 
+    }
 
     post {
         success {
