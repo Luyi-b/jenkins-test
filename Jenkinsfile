@@ -29,8 +29,8 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-        
-    
+    } 
+
     post {
         success {
             echo 'Deployment successful!'
@@ -40,3 +40,4 @@ pipeline {
         }
     }
 }
+
